@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}ナビゲーション{% endblock title %}
+
+{% block content %}
+<h4 class="mt-4 border-bottom">ナビゲーション</h4>
+<p>
+	<div id="navigation"></div>
+</p>
+<div style="float: right"></p><a href="{% url 'sample:parent_list' %}">親一覧へ</a></div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+	var navigationData = JSON.parse('{{ navigation | safe }}');
+    $('#navigation').treeview({
+		data: navigationData
+	});
+	
+</script>
+{% endblock %}
