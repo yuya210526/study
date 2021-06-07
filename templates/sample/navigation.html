@@ -4,9 +4,31 @@
 
 {% block content %}
 <h4 class="mt-4 border-bottom">ナビゲーション</h4>
+
 <p>
+	<h6 class="mt-3 border-bottom">bootstrap-treeview</h6>
+	<div style="float: right" id="select_node1"></div><br>
 	<div id="navigation"></div>
 </p>
+
+<p>
+	<h6 class="mt-3 border-bottom">vuetify</h6>
+	<div style="float: right" id="select_node2"><font color="red">初回選択でイベントが発行されないのはなぜ?</font></div><br>
+	<div id="navigation2">
+		<v-app id="inspire">
+		  <v-treeview
+			activatable
+			:items="items"
+			:return-object="true"
+			:item-key="id"
+			@input="onInputed"
+			@update:active="onSelected"
+			@update:open="onOpened"
+		  ></v-treeview>
+		</v-app>
+	</div>
+</p>
+
 <div style="float: right"></p><a href="{% url 'sample:parent_list' %}">親一覧へ</a></div>
 {% endblock content %}
 
@@ -14,8 +36,52 @@
 <script>
 	var navigationData = JSON.parse('{{ navigation | safe }}');
     $('#navigation').treeview({
-		data: navigationData
+		data: navigationData,
+		onNodeSelected: function(event, node) {
+			document.getElementById('select_node1').innerHTML = node.text + ' が選択されました。';
+		}
 	});
-	
+	$('#navigation').on('nodeUnselected', function(event, node) {
+			document.getElementById('select_node1').innerHTML = '選択が解除されました。';
+		});
+	$('#navigation').treeview('selectNode', [ 0 ]);
+	$('#navigation').treeview('revealNode', 0);
+</script>
+<script>
+	var navigationData2 = [];
+	var index = 0;
+	JSON.parse('{{ navigation | safe }}').forEach(function(parent){
+		index++;
+		var node = { id: index, name: parent.text, children: []};
+		parent.nodes.forEach(function(child){
+			index++;
+			node.children.push({ id: index, name: child.text, children: []});
+		});
+		navigationData2.push(node);
+	});
+
+	var vue = new Vue({
+		el: '#navigation2',
+		vuetify: new Vuetify(),
+		data: () => ({
+			items: navigationData2,
+		}),
+        methods: {
+			onInputed: function(nodes) {
+				var index2 = 0;
+        	},
+			onSelected: function(nodes) {
+				if(nodes.length){
+      				document.getElementById('select_node2').innerHTML = nodes[0].name + ' が選択されました。';
+				} else {
+      				document.getElementById('select_node2').innerHTML = '選択が解除されました。';
+				}
+        	},
+			onOpened: function(nodes) {
+				var index2 = 0;
+        	},
+		},
+	})
+	var index2 = 0;
 </script>
 {% endblock %}
