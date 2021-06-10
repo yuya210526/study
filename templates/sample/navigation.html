@@ -12,15 +12,16 @@
 </p>
 
 <p>
-	<h6 class="mt-3 border-bottom">vuetify</h6>
+	<h6 class="mt-3 border-bottom">vuetify Treeview</h6>
 	<div style="float: right" id="select_node2"><font color="red">初回選択でイベントが発行されないのはなぜ?</font></div><br>
-	<div id="navigation2">
+	<div id="navigation2" style="height: 288px;">
 		<v-app id="inspire">
 		  <v-treeview
+		  mandatory
 			activatable
 			:items="items"
 			:return-object="true"
-			:item-key="id"
+			@click="piyo"
 			@input="onInputed"
 			@update:active="onSelected"
 			@update:open="onOpened"
@@ -29,6 +30,38 @@
 	</div>
 </p>
 
+<p>
+	<h6 class="mt-3 border-bottom">vuetify Lists</h6>
+	<!-- https://v2.vuetifyjs.com/ja/components/list-item-groups/#usage -->
+	<!-- https://v2.vuetifyjs.com/ja/components/lists/ -->
+	<!-- https://qiita.com/rubytomato@github/items/784a0eb013a9de1937bd -->
+	<div id="navigation3" style="height: 352px;width: 400px;">
+		<v-app id="inspire">
+			<v-card
+				class="mx-auto"
+				width="400"
+			>
+				<v-list expand>
+					<v-subheader>ナビゲーション</v-subheader>
+					<v-list-group v-for="item in items" :key="item.text" no-action>
+						<template v-slot:activator>
+							<v-list-item-content>
+								<v-list-item-title v-text="item.text"></v-list-item-title>
+							</v-list-item-content>
+						</template>
+						<template v-for="node in item.nodes">
+							<v-list-item :key="node.text" link>
+								<v-list-item-content>
+									<v-list-item-title v-text="node.text"></v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+						</template>
+					</v-list-group>
+				</v-list>
+			</v-card>
+		</v-app>
+	</div>
+</p>
 <div style="float: right"></p><a href="{% url 'sample:parent_list' %}">親一覧へ</a></div>
 {% endblock content %}
 
@@ -60,7 +93,7 @@
 		navigationData2.push(node);
 	});
 
-	var vue = new Vue({
+	var tree = new Vue({
 		el: '#navigation2',
 		vuetify: new Vuetify(),
 		data: () => ({
@@ -78,10 +111,23 @@
 				}
         	},
 			onOpened: function(nodes) {
-				var index2 = 0;
+
         	},
+			piyo(e) {
+				if (!window.confirm('お前はそれでいいのか？')) e.preventDefault();
+			},
 		},
 	})
-	var index2 = 0;
+</script>
+<script>
+	var navigationData3 = JSON.parse('{{ navigation | safe }}');
+	var list = new Vue({
+		el: '#navigation3',
+		vuetify: new Vuetify(),
+		data: () => ({
+			items: navigationData3,
+			model: 0,
+		}),
+	})
 </script>
 {% endblock %}
