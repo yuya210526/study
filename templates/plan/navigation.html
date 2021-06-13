@@ -97,7 +97,11 @@
 							+ '/category/' + nodes[0].split('|')[0]
 							+ '/id/' + nodes[0].split('|')[1]   + '/'
 				} else {
-      				document.getElementById('select_node2').innerHTML = '選択が解除されました。';
+					// 直接パスを書きたくないな...
+					this_.window.location.href = 
+						'/plan/date/' + '{{target_date}}'
+							+ '/category/' + this.active[0].split('|')[0]
+							+ '/id/' + this.active[0].split('|')[1]   + '/'
 				}
         	}
 		}
