@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}マスター管理{% endblock title %}
+
+{% block content %}
+<h1 class="mt-4 border-bottom">マスター管理</h1>
+<div><h3><a href="{% url 'master:parent_list' %}">親一覧へ</a></h3></div>
+{% endblock content %}
+
+{% block extra_js %}
+{% endblock %}

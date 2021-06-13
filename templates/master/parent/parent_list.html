@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block extra_css %}
+<style>
+	.master_list {
+		clear: both;
+		height: 250px;
+		height: 250px;
+	}
+	.v-application--wrap {
+		min-height: 250px;
+		max-height: 250px;
+		overflow-y: scroll;
+	}
+	.master_editor {
+		clear: both;
+		width: 100%;
+	}
+</style>
+
+{% endblock %}
+{% block extra_vuejs_tmp %}{% endblock %}
+
+{% block title %}親一覧{% endblock title %}
+
+{% block content %}
+<h4 class="mt-4 border-bottom">親管理</h4>
+<div style="float: right; display:inline;">
+	<p ><a href="{% url 'sample:navigation' %}">ナビゲーションへ</a></p>
+	<!-- https://v2.vuetifyjs.com/ja/components/list-item-groups/#usage -->
+	<!-- https://v2.vuetifyjs.com/ja/components/lists/ -->
+	<!-- https://qiita.com/rubytomato@github/items/784a0eb013a9de1937bd -->
+</div>
+<div id="palent_list" class="master_list">
+	<v-app id="inspire">
+		<v-card
+			class="mx-auto"
+			width="100%"
+		>
+			<v-list>
+				<v-list-item-group 
+					v-model="model"
+					mandatory
+				>
+					<v-list-item
+						v-for="(item, i) in items"
+						:key="i"
+						:link=true
+						:href="item.link"
+						@click="onclicked"
+					>
+					<v-list-item-content>
+						<v-list-item-title v-text="item.id"></v-list-item-title>
+					</v-list-item-content>
+					<v-list-item-content>
+						<v-list-item-title v-text="item.text"></v-list-item-title>
+					</v-list-item-content>
+					</v-list-item>
+				</v-list-item-group>
+			</v-list>
+		</v-card>
+	</v-app>
+</div>
+<div style="float: right">
+	<a href="{% url 'sample:parent_add' %}" class="btn btn-primary btn-sm my-3">追加</a>
+	<a href="" class="btn btn-outline-danger btn-sm">削除</a>
+</div>
+
+<div  class="master_editor">
+    <form action="{% url 'master:parent:parent_put' target_id=target_id %}" method="post">
+	{% csrf_token %}
+	{% bootstrap_form form show_label=True layout='horizontal' %}
+	<div class="form-group row">
+		<div class="offset-md-3 col-md-9">
+		  <button type="submit" class="btn btn-primary" style="float: right">送信</button>
+		</div>
+	</div>
+	</form>
+</div>
+{% endblock content %}
+{% block extra_js %}
+<script>
+	var parentsList = new Vue({
+		el: '#palent_list',
+		vuetify: new Vuetify(),
+		data: () => ({
+			items: JSON.parse('{{ parent_list | safe }}'),
+			model: Number('{{ target_index }}'),
+		}),
+        methods: {
+			onclicked: function(nodes) {
+				if(nodes){
+				} else {
+				}
+        	},
+		},
+	})
+</script>
+{% endblock %}
