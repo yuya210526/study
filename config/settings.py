@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'sample.apps.SampleConfig',
     'master.apps.MasterConfig',
     # 'master.parent.apps.ParentConfig',
+    'plan.apps.PlanConfig',
 ]
 
 MIDDLEWARE = [

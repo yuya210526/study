@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block extra_css %}
+<style>
+	.v-application--wrap {
+		min-height: 100%;
+		max-height: 100%;
+	}
+</style>
+
+{% endblock %}
+
+{% block title %}ナビゲーション{% endblock title %}
+
+{% block content %}
+<div class="row">
+	<div class="col-sm-6">
+		<h4 class="mt-4 border-bottom">ナビゲーション</h4>
+		<!-- https://v2.vuetifyjs.com/ja/components/treeview/ -->
+		<!-- https://vuetifyjs.com/ja/components/treeview/ -->
+		<!-- https://vuetifyjs.com/ja/api/v-treeview/ -->
+		<div id="navigation" class="col-sm-8">
+			<v-app id="inspire">
+				<v-treeview
+				mandatory
+				activatable
+				open-all
+				item-key="key"
+				:items="items"
+				:active="active"
+				@update:active="onSelected"
+				></v-treeview>
+			</v-app>
+		</div>
+	</div>
+	<div id="plan" class="col-sm-6">
+		<h4 class="mt-4 border-bottom">計画</h4>
+			{% if plan_id %}
+			<form action="#" method="post">
+			{% else %}
+			<form action="#" method="post">
+			{% endif %}
+				{% csrf_token %}
+				{% bootstrap_form form show_label=True layout='horizontal' %}
+				<div class="form-group row">
+					<div class="offset-md-3 col-md-9">
+					<button type="submit" class="btn btn-outline-success" style="float: right">
+						{% if plan_id %}
+						更新
+						{% else %}
+						登録
+						{% endif %}
+					</button>
+					</div>
+				</div>
+			</form>
+	</div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+	var this_ = this;
+	var targetCategory = Number('{{target_category}}');
+	var targetId = Number('{{target_id}}');
+	var active = [];
+	var navigationData = [];
+	JSON.parse('{{ navigation | safe }}').forEach(function(parent){
+		// v-treeview用のitem-keyを設定
+		parent['key'] = parent.category + '|' + parent.id
+		if(parent.category == targetCategory && parent.id == targetId){
+			active.push(parent.key)
+		}
+		parent.children.forEach(function(child){
+			// v-treeview用のitem-keyを設定
+			child['key'] = child.category + '|' + child.id
+			if(child.category == targetCategory && child.id == targetId){
+				active.push(child.key)
+			}
+		});
+		navigationData.push(parent);
+	});
+	var tree = new Vue({
+		el: '#navigation',
+		vuetify: new Vuetify(),
+		data: () => ({
+			items: navigationData,
+			active: active
+		}),
+        methods: {
+			onSelected: function(nodes) {
+				if(nodes.length){
+					// 直接パスを書きたくないな...
+					this_.window.location.href = 
+						'/plan/date/' + '{{target_date}}'
+							+ '/category/' + nodes[0].split('|')[0]
+							+ '/id/' + nodes[0].split('|')[1]   + '/'
+				} else {
+      				document.getElementById('select_node2').innerHTML = '選択が解除されました。';
+				}
+        	}
+		}
+	})
+</script>
+{% endblock %}
