@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.views import View
 from django.views.generic.list import ListView
+from django.views.generic import RedirectView
 
 from sample.models import Parent
 from sample.forms import ParentForm
@@ -82,3 +83,11 @@ class NavigationView(View):
                 child_node['nodes'] = []
                 parent_node['nodes'].append(child_node)
         return render(request, self.template_name, {'navigation': json.dumps(navigation)})
+        
+
+class NavigationView2(View):
+    """ナビゲーション"""
+    template_name='sample/navigation2.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)

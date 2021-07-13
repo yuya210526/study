@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}ナビゲーション{% endblock title %}
+
+{% block content %}
+<div id="navigation">
+	<div style="float: right" id="select_node"></div>
+    <my-navigation v-on:node-click="select"></my-navigation>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+{% load static %}
+<script type="module" src="{% static 'customjs\navigation.js' %}"></script>
+{% endblock %}
